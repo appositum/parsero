@@ -1,7 +1,6 @@
 module Parsec where
 
 import Control.Applicative
-import Data.Char
 
 newtype Parser a = MkParser { parse :: String -> [(a, String)] }
 
@@ -17,6 +16,13 @@ instance Applicative Parser where
     case parse pf input of
       [] -> []
       [(f, rest)] -> parse (f <$> px) rest
+
+instance Alternative Parser where
+  empty = MkParser $ const []
+  p1 <|> p2 = MkParser $ \input ->
+    case parse p1 input of
+      [] -> parse p2 input
+      [(x, xs)] -> [(x, xs)]
 
 instance Monad Parser where
   p >>= f = MkParser $ \input ->
