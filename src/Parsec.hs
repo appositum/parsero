@@ -35,3 +35,15 @@ item = MkParser $ \input ->
   case input of
     [] -> []
     (x:xs) -> [(x, xs)]
+
+satisfy :: (Char -> Bool) -> Parser Char
+satisfy p = MkParser $ \input ->
+  case input of
+    [] -> []
+    (x:xs) ->
+      if p x
+      then [(x, xs)]
+      else []
+
+char :: Char -> Parser Char
+char c = satisfy (==c)
