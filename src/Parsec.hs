@@ -18,6 +18,12 @@ instance Applicative Parser where
       [] -> []
       [(f, rest)] -> parse (f <$> px) rest
 
+instance Monad Parser where
+  p >>= f = MkParser $ \input ->
+    case parse p input of
+      [] -> []
+      [(x, xs)] -> parse (f x) xs
+
 item :: Parser Char
 item = MkParser $ \input ->
   case input of
