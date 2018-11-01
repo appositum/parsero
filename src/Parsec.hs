@@ -1,6 +1,7 @@
 module Parsec where
 
 import Control.Applicative
+import Data.Char
 
 newtype Parser a = MkParser { parse :: String -> [(a, String)] }
 
@@ -47,3 +48,9 @@ satisfy p = MkParser $ \input ->
 
 char :: Char -> Parser Char
 char c = satisfy (==c)
+
+digit :: Parser Char
+digit = satisfy isDigit
+
+integer :: Parser Integer
+integer = read <$> some digit
