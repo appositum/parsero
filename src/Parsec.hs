@@ -3,7 +3,8 @@ module Parsec where
 import Control.Applicative
 import Data.Char
 
-newtype Parser a = MkParser { parse :: String -> [(a, String)] }
+newtype Parser a = MkParser
+  { parse :: String -> [(a, String)] }
 
 instance Functor Parser where
   fmap f p = MkParser $ \input ->
@@ -41,10 +42,13 @@ satisfy :: (Char -> Bool) -> Parser Char
 satisfy p = MkParser $ \input ->
   case input of
     [] -> []
-    (x:xs) ->
-      if p x
-      then [(x, xs)]
-      else []
+    (x:xs) -> if p x then [(x, xs)] else []
+
+oneOf :: [Char] -> Parser Char
+oneOf = satisfy . flip elem
+
+noneOf :: [Char] -> Parser Char
+noneOf = satisfy . flip notElem
 
 char :: Char -> Parser Char
 char c = satisfy (==c)
