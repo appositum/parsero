@@ -78,5 +78,12 @@ string ccs@(c:cs) = char c *> string cs *> pure ccs
 digit :: Parser Char
 digit = satisfy isDigit
 
+natural :: Parser Integer
+natural = read <$> some digit
+
 integer :: Parser Integer
-integer = read <$> some digit
+integer = sign <*> natural where
+  sign :: Parser (Integer -> Integer)
+  sign =  negate <$ char '-'
+      <|> id <$ char '+'
+      <|> pure id
