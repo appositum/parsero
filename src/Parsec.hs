@@ -78,12 +78,23 @@ string ccs@(c:cs) = char c *> string cs *> pure ccs
 digit :: Parser Char
 digit = satisfy isDigit
 
+signed :: Num a => Parser (a -> a)
+signed =  negate <$ char '-'
+      <|> id <$ char '+'
+      <|> pure id
+
 natural :: Parser Integer
 natural = read <$> some digit
 
 integer :: Parser Integer
-integer = sign <*> natural where
-  sign :: Parser (Integer -> Integer)
-  sign =  negate <$ char '-'
-      <|> id <$ char '+'
-      <|> pure id
+integer = signed <*> natural
+
+double' :: Parser Double
+double' = do
+  n <- some digit
+  dot <- char '.'
+  m <- some digit
+  pure $ read $ n ++ (dot : m)
+
+double :: Parser Double
+double = signed <*> double'
