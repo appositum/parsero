@@ -1,8 +1,10 @@
 module Parsec where
 
 import Control.Applicative
+import Data.Char
 
-newtype Parser a = MkParser { parse :: String -> [(a, String)] }
+newtype Parser a = MkParser
+  { parse :: String -> [(a, String)] }
 
 instance Functor Parser where
   fmap f p = MkParser $ \input ->
@@ -40,10 +42,57 @@ satisfy :: (Char -> Bool) -> Parser Char
 satisfy p = MkParser $ \input ->
   case input of
     [] -> []
-    (x:xs) ->
-      if p x
-      then [(x, xs)]
-      else []
+    (x:xs) -> if p x then [(x, xs)] else []
+
+oneOf :: [Char] -> Parser Char
+oneOf = satisfy . flip elem
+
+noneOf :: [Char] -> Parser Char
+noneOf = satisfy . flip notElem
 
 char :: Char -> Parser Char
 char c = satisfy (==c)
+
+space :: Parser Char
+space = satisfy isSpace
+
+lower :: Parser Char
+lower = satisfy isLower
+
+upper :: Parser Char
+upper = satisfy isUpper
+
+alphaNum :: Parser Char
+alphaNum = satisfy isAlphaNum
+
+alpha :: Parser Char
+alpha = satisfy isAlpha
+
+letter :: Parser Char
+letter = alpha
+
+string :: String -> Parser String
+string "" = pure ""
+string ccs@(c:cs) = char c *> string cs *> pure ccs
+
+digit :: Parser Char
+digit = satisfy isDigit
+
+signed :: Num a => Parser (a -> a)
+signed =  negate <$ char '-'
+      <|> id <$ char '+'
+      <|> pure id
+
+natural :: Parser Integer
+natural = read <$> some digit
+
+integer :: Parser Integer
+integer = signed <*> natural
+
+double :: Parser Double
+double = signed <*> double' where
+  double' = do
+    first <- some digit
+    dot <- char '.'
+    rest <- some digit
+    pure $ read $ first ++ (dot : rest)
