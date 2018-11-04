@@ -1,7 +1,8 @@
-module Parsec where
+module Cuceta where
 
 import Control.Applicative
 import Data.Char
+import Data.Foldable
 
 newtype Parser a = MkParser
   { parse :: String -> [(a, String)] }
@@ -96,3 +97,19 @@ double = signed <*> double' where
     dot <- char '.'
     rest <- some digit
     pure $ read $ first ++ (dot : rest)
+
+toDecimal :: Integer -> String -> Integer
+toDecimal base =
+  foldl' (\x z -> base*x + fromIntegral (digitToInt z)) 0
+
+hex :: Parser Integer
+hex = some hexDigit >>= pure . toDecimal 16
+  where hexDigit = digit <|> oneOf (['a'..'f'] ++ ['A'..'F'])
+
+oct :: Parser Integer
+oct = some octDigit >>= pure . toDecimal 8
+  where octDigit = oneOf ['0'..'7']
+
+bin :: Parser Integer
+bin = some binDigit >>= pure . toDecimal 2
+  where binDigit = oneOf "01"
