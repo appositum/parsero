@@ -103,13 +103,14 @@ toDecimal base =
   foldl' (\x z -> base*x + fromIntegral (digitToInt z)) 0
 
 hex :: Parser Integer
-hex = some hexDigit >>= pure . toDecimal 16
-  where hexDigit = digit <|> oneOf (['a'..'f'] ++ ['A'..'F'])
+hex = char '0' *> oneOf "xX" *>
+  some hexDigit >>= pure . toDecimal 16 where
+    hexDigit = digit <|> oneOf (['a'..'f'] ++ ['A'..'F'])
 
 oct :: Parser Integer
-oct = some octDigit >>= pure . toDecimal 8
-  where octDigit = oneOf ['0'..'7']
+oct = char '0' *> oneOf "oO" *>
+  some (oneOf ['0'..'7']) >>= pure . toDecimal 8
 
 bin :: Parser Integer
-bin = some binDigit >>= pure . toDecimal 2
-  where binDigit = oneOf "01"
+bin = char '0' *> oneOf "bB" *>
+  some (oneOf "01") >>= pure . toDecimal 2

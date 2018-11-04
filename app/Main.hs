@@ -2,7 +2,7 @@ module Main where
 
 import Control.Applicative
 import Data.Char
-import Parsec
+import Cuceta
 
 main :: IO ()
 main = pure ()
