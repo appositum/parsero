@@ -89,12 +89,10 @@ natural = read <$> some digit
 integer :: Parser Integer
 integer = signed <*> natural
 
-double' :: Parser Double
-double' = do
-  n <- some digit
-  dot <- char '.'
-  m <- some digit
-  pure $ read $ n ++ (dot : m)
-
 double :: Parser Double
-double = signed <*> double'
+double = signed <*> double' where
+  double' = do
+    first <- some digit
+    dot <- char '.'
+    rest <- some digit
+    pure $ read $ first ++ (dot : rest)
