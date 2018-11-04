@@ -51,6 +51,12 @@ oneOf = satisfy . flip elem
 noneOf :: [Char] -> Parser Char
 noneOf = satisfy . flip notElem
 
+skipMany :: Parser a -> Parser ()
+skipMany p = many p *> pure ()
+
+skipSome :: Parser a -> Parser ()
+skipSome p = some p *> pure ()
+
 char :: Char -> Parser Char
 char c = satisfy (==c)
 
