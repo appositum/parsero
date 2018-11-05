@@ -57,6 +57,9 @@ skipMany p = many p *> pure ()
 skipSome :: Parser a -> Parser ()
 skipSome p = some p *> pure ()
 
+skipOptional :: Parser a -> Parser ()
+skipOptional p = () <$ p <|> pure ()
+
 char :: Char -> Parser Char
 char c = satisfy (==c)
 
