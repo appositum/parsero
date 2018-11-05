@@ -1,8 +1,7 @@
 module Main where
 
-import Control.Applicative
+import Cuceta
 import Data.Char
-import Parsec
 
 main :: IO ()
 main = pure ()
