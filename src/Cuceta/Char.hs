@@ -67,7 +67,7 @@ double = signed <*> double' where
     first <- some digit
     dot <- char '.'
     rest <- some digit
-    pure $ read $ first ++ (dot : rest)
+    pure $ read (first ++ dot : rest)
 
 float :: Parser Double
 float = double
