@@ -13,6 +13,7 @@ module Cuceta.Char
   , natural
   , oct
   , space
+  , spaces
   , string
   , upper
   ) where
@@ -27,6 +28,9 @@ char c = satisfy (==c)
 
 space :: Parser Char
 space = satisfy isSpace
+
+spaces :: Parser ()
+spaces :: skipMany space
 
 lower :: Parser Char
 lower = satisfy isLower
