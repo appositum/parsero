@@ -24,6 +24,7 @@ library
       Cuceta.Char
       Cuceta.Combinators
       Cuceta.Parser
+      Cuceta.Tokenizer
   other-modules:
       Paths_cuceta
   hs-source-dirs:
@@ -39,7 +40,7 @@ test-suite cuceta-test
       Paths_cuceta
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:
       base >=4.7 && <5
     , cuceta
