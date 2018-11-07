@@ -1,13 +1,17 @@
 module Cuceta.Char
   ( alpha
   , alphaNum
+  , anyChar
   , char
   , digit
   , letter
   , lower
+  , newline
+  , notChar
   , space
   , spaces
   , string
+  , tab
   , upper
   ) where
 

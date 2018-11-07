@@ -1,12 +1,26 @@
 module Cuceta.Tokenizer
-  ( bin
+  ( angles
+  , bin
+  , braces
+  , brackets
+  , charLiteral
+  , colon
+  , comma
   , double
+  , dot
   , float
   , hex
   , integer
+  , integerOrDouble
   , natural
+  , naturalOrDouble
   , oct
+  , parens
+  , semicolon
+  , stringLiteral
+  , stringLiteral'
   , symbol
+  , symbolic
   , token
   ) where
 
@@ -15,6 +29,10 @@ import Cuceta.Combinators
 import Cuceta.Parser
 import Data.Char
 import Data.Foldable (foldl')
+
+data IntegerOrDouble = MkInteger Integer
+                     | MkDouble Double
+                     deriving (Eq, Show)
 
 token :: Parser a -> Parser a
 token p = do
@@ -25,6 +43,54 @@ token p = do
 
 symbol :: String -> Parser String
 symbol = token . string
+
+symbolic :: Char -> Parser Char
+symbolic = token . char
+
+charLiteral :: Parser Char
+charLiteral = do
+  char '\''
+  c <- anyChar
+  char '\''
+  pure c
+
+stringLiteral :: Parser String
+stringLiteral = do
+  char '"'
+  str <- many $ notChar '"'
+  char '"'
+  pure str
+
+stringLiteral' :: Parser String
+stringLiteral' = do
+  char '\''
+  str <- many $ notChar '\''
+  char '\''
+  pure str
+
+comma :: Parser Char
+comma = symbolic ','
+
+dot :: Parser Char
+dot = symbolic '.'
+
+colon :: Parser Char
+colon = symbolic ':'
+
+semicolon :: Parser Char
+semicolon = symbolic ';'
+
+parens :: Parser a -> Parser a
+parens = between (symbolic '(') (symbolic ')')
+
+brackets :: Parser a -> Parser a
+brackets = between (symbolic '[') (symbolic ']')
+
+braces :: Parser a -> Parser a
+braces = between (symbolic '{') (symbolic '}')
+
+angles :: Parser a -> Parser a
+angles = between (symbolic '<') (symbolic '>')
 
 signed :: Num a => Parser (a -> a)
 signed =  negate <$ char '-'
@@ -47,6 +113,12 @@ double = token $ signed <*> double' where
 
 float :: Parser Double
 float = double
+
+integerOrDouble :: Parser IntegerOrDouble
+integerOrDouble = MkDouble <$> double <|> MkInteger <$> integer
+
+naturalOrDouble :: Parser IntegerOrDouble
+naturalOrDouble = MkDouble <$> double <|> MkInteger <$> natural
 
 toDecimal :: Integer -> String -> Integer
 toDecimal base =
