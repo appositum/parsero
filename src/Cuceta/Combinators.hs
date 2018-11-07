@@ -18,16 +18,16 @@ import Data.Foldable (asum)
 item :: Parser Char
 item = MkParser $ \input ->
   case input of
-    [] -> (Left "empty input", [])
+    [] -> (Left EmptyInput, [])
     (a:rest) -> (Right a, rest)
 
 satisfy :: (Char -> Bool) -> Parser Char
 satisfy p = MkParser $ \input ->
   case input of
-    [] -> (Left "end of stream", [])
+    [] -> (Left EndOfStream, [])
     (a:rest) ->
       if p a then (Right a, rest)
-      else (Left "does not satisfy", rest)
+      else (Left DoesNotSatisfy, rest)
 
 oneOf :: [Char] -> Parser Char
 oneOf = satisfy . flip elem
