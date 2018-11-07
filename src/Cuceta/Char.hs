@@ -39,9 +39,21 @@ alpha = satisfy isAlpha
 letter :: Parser Char
 letter = alpha
 
+anyChar :: Parser Char
+anyChar = satisfy (const True)
+
+notChar :: Char -> Parser Char
+notChar c = satisfy (/=c)
+
 string :: String -> Parser String
 string "" = pure ""
 string ccs@(c:cs) = char c *> string cs *> pure ccs
 
 digit :: Parser Char
 digit = satisfy isDigit
+
+tab :: Parser Char
+tab = char '\t'
+
+newline :: Parser Char
+newline = char '\n'
