@@ -1,5 +1,6 @@
 module Cuceta.Combinators
-  ( item
+  ( between
+  , item
   , noneOf
   , oneOf
   , satisfy
@@ -27,6 +28,13 @@ oneOf = satisfy . flip elem
 
 noneOf :: [Char] -> Parser Char
 noneOf = satisfy . flip notElem
+
+between :: Parser open -> Parser close -> Parser a -> Parser a
+between open close p = do
+  open
+  val <- p
+  close
+  pure val
 
 skipMany :: Parser a -> Parser ()
 skipMany p = many p *> pure ()
