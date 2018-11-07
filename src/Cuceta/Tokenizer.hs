@@ -30,6 +30,10 @@ import Cuceta.Parser
 import Data.Char
 import Data.Foldable (foldl')
 
+data IntegerOrDouble = MkInteger Integer
+                     | MkDouble Double
+                     deriving (Eq, Show)
+
 token :: Parser a -> Parser a
 token p = do
   spaces
@@ -110,11 +114,11 @@ double = token $ signed <*> double' where
 float :: Parser Double
 float = double
 
-integerOrDouble :: Parser (Either Integer Double)
-integerOrDouble = Right <$> double <|> Left <$> integer
+integerOrDouble :: Parser IntegerOrDouble
+integerOrDouble = MkDouble <$> double <|> MkInteger <$> integer
 
-naturalOrDouble :: Parser (Either Integer Double)
-naturalOrDouble = Right <$> double <|> Left <$> natural
+naturalOrDouble :: Parser IntegerOrDouble
+naturalOrDouble = MkDouble <$> double <|> MkInteger <$> natural
 
 toDecimal :: Integer -> String -> Integer
 toDecimal base =
