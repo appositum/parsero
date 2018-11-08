@@ -1,4 +1,4 @@
-module Cuceta.Parser
+module Text.Cuceta.Parser
   ( empty
   , many
   , optional

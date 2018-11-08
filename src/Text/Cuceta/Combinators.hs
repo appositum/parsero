@@ -1,4 +1,4 @@
-module Cuceta.Combinators
+module Text.Cuceta.Combinators
   ( between
   , choice
   , item
@@ -13,7 +13,7 @@ module Cuceta.Combinators
   , try
   ) where
 
-import Cuceta.Parser
+import Text.Cuceta.Parser
 
 item :: Parser Char
 item = MkParser $ \input ->

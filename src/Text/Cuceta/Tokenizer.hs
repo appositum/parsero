@@ -1,4 +1,4 @@
-module Cuceta.Tokenizer
+module Text.Cuceta.Tokenizer
   ( angles
   , bin
   , braces
@@ -24,9 +24,9 @@ module Cuceta.Tokenizer
   , token
   ) where
 
-import Cuceta.Char
-import Cuceta.Combinators
-import Cuceta.Parser
+import Text.Cuceta.Char
+import Text.Cuceta.Combinators
+import Text.Cuceta.Parser
 import Data.Char
 import Data.Foldable (foldl')
 

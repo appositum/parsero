@@ -1,4 +1,4 @@
-module Cuceta.Char
+module Text.Cuceta.Char
   ( alpha
   , alphaNum
   , anyChar
@@ -15,8 +15,8 @@ module Cuceta.Char
   , upper
   ) where
 
-import Cuceta.Combinators
-import Cuceta.Parser
+import Text.Cuceta.Combinators
+import Text.Cuceta.Parser
 import Data.Char
 
 char :: Char -> Parser Char
