@@ -1,2 +1,2 @@
 # Cuceta
-Parsec from scratch.
+Parsequinho
