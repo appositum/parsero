@@ -10,6 +10,7 @@ module Cuceta.Combinators
   , skipOptional
   , skipSome
   , surroundedBy
+  , try
   ) where
 
 import Cuceta.Parser
@@ -27,6 +28,12 @@ satisfy p = MkParser $ \input ->
     (a:rest) ->
       if p a then (Right a, rest)
       else (Left DoesNotSatisfy, rest)
+
+try :: Parser a -> Parser a
+try p = MkParser $ \input ->
+  case parse p input of
+    (Left err, _) -> (Left err, input)
+    (Right a, input') -> (Right a, input')
 
 oneOf :: [Char] -> Parser Char
 oneOf = satisfy . flip elem
