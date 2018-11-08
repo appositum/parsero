@@ -13,7 +13,6 @@ module Cuceta.Combinators
   ) where
 
 import Cuceta.Parser
-import Data.Foldable (asum)
 
 item :: Parser Char
 item = MkParser $ \input ->
@@ -52,7 +51,7 @@ between open close p = do
   pure val
 
 choice :: [Parser a] -> Parser a
-choice = asum
+choice = foldr (<|>) empty
 
 option :: a -> Parser a -> Parser a
 option a p = p <|> pure a
