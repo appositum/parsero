@@ -36,9 +36,9 @@ data IntegerOrDouble = MkInteger Integer
 
 token :: Parser a -> Parser a
 token p = do
-  spaces
+  whitespaces
   v <- p
-  spaces
+  whitespaces
   pure v
 
 symbol :: String -> Parser String

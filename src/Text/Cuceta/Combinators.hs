@@ -36,10 +36,10 @@ try p = MkParser $ \input ->
     (Right a, input') -> (Right a, input')
 
 oneOf :: [Char] -> Parser Char
-oneOf = satisfy . flip elem
+oneOf xs = satisfy (\x -> x `elem` xs)
 
 noneOf :: [Char] -> Parser Char
-noneOf = satisfy . flip notElem
+noneOf xs = satisfy (\x -> x `notElem` xs)
 
 skipMany :: Parser a -> Parser ()
 skipMany p = many p *> pure ()
