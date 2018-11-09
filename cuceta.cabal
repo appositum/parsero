@@ -20,11 +20,11 @@ source-repository head
 
 library
   exposed-modules:
-      Cuceta
-      Cuceta.Char
-      Cuceta.Combinators
-      Cuceta.Parser
-      Cuceta.Tokenizer
+      Text.Cuceta
+      Text.Cuceta.Char
+      Text.Cuceta.Combinators
+      Text.Cuceta.Parser
+      Text.Cuceta.Tokenizer
   other-modules:
       Paths_cuceta
   hs-source-dirs:

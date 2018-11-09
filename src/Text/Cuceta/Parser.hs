@@ -1,5 +1,6 @@
-module Cuceta.Parser
-  ( many
+module Text.Cuceta.Parser
+  ( empty
+  , many
   , optional
   , some
   , ParseError(..)
