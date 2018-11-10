@@ -15,6 +15,8 @@ module Text.Cuceta.Combinators
   , skipOptional
   , skipSome
   , skipWhile
+  , sepBy
+  , sepBy1
   , surroundedBy
   , try
   ) where
@@ -100,3 +102,12 @@ option a p = p <|> pure a
 
 surroundedBy :: Parser a -> Parser s -> Parser a
 surroundedBy p s = between s s p
+
+sepBy :: Parser a -> Parser sep -> Parser [a]
+sepBy p sep = sepBy1 p sep <|> pure []
+
+sepBy1 :: Parser a -> Parser sep -> Parser [a]
+sepBy1 p sep = do
+  x <- p
+  xs <- many (sep >> p)
+  pure (x:xs)
