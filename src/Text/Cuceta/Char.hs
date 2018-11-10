@@ -2,9 +2,12 @@ module Text.Cuceta.Char
   ( alpha
   , alphaNum
   , anyChar
+  , carriage
   , char
   , char'
+  , crlf
   , digit
+  , eol
   , letter
   , lower
   , newline
@@ -68,3 +71,12 @@ tab = char '\t'
 
 newline :: Parser Char
 newline = char '\n'
+
+carriage :: Parser Char
+carriage = char '\r'
+
+crlf :: Parser Char
+crlf = carriage *> newline
+
+eol :: Parser Char
+eol = newline <|> crlf
