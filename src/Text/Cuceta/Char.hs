@@ -3,6 +3,7 @@ module Text.Cuceta.Char
   , alphaNum
   , anyChar
   , char
+  , char'
   , digit
   , letter
   , lower
@@ -21,6 +22,18 @@ import Data.Char
 
 char :: Char -> Parser Char
 char c = satisfy (==c)
+
+-- Case insensitive
+char' :: Char -> Parser Char
+char' c =  char (toLower c)
+       <|> char (toUpper c)
+       <|> char (toTitle c)
+
+anyChar :: Parser Char
+anyChar = satisfy (const True)
+
+notChar :: Char -> Parser Char
+notChar c = satisfy (/=c)
 
 space :: Parser Char
 space = satisfy isSpace
@@ -42,12 +55,6 @@ alpha = satisfy isAlpha
 
 letter :: Parser Char
 letter = alpha
-
-anyChar :: Parser Char
-anyChar = satisfy (const True)
-
-notChar :: Char -> Parser Char
-notChar c = satisfy (/=c)
 
 string :: String -> Parser String
 string "" = pure ""
