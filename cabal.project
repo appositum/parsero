@@ -1,1 +1,2 @@
+with-compiler: ghc-8.4.3
 packages: ./*.cabal
