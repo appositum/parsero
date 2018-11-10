@@ -5,6 +5,8 @@ module Text.Cuceta.Combinators
   , consumeMany
   , consumeSome
   , consumeTill
+  , endBy
+  , endBy1
   , item
   , manyTill
   , noneOf
@@ -111,3 +113,9 @@ sepBy1 p sep = do
   x <- p
   xs <- many (sep >> p)
   pure (x:xs)
+
+endBy :: Parser a -> Parser end -> Parser [a]
+endBy p end = many (p <* end)
+
+endBy1 :: Parser a -> Parser end -> Parser [a]
+endBy1 p end = some (p <* end)
