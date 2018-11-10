@@ -2,14 +2,18 @@ module Text.Cuceta.Char
   ( alpha
   , alphaNum
   , anyChar
+  , carriage
   , char
+  , char'
+  , crlf
   , digit
+  , eol
   , letter
   , lower
   , newline
   , notChar
   , space
-  , spaces
+  , skipWhitespaces
   , string
   , tab
   , upper
@@ -22,11 +26,23 @@ import Data.Char
 char :: Char -> Parser Char
 char c = satisfy (==c)
 
+-- Case insensitive
+char' :: Char -> Parser Char
+char' c =  char (toLower c)
+       <|> char (toUpper c)
+       <|> char (toTitle c)
+
+anyChar :: Parser Char
+anyChar = satisfy (const True)
+
+notChar :: Char -> Parser Char
+notChar c = satisfy (/=c)
+
 space :: Parser Char
 space = satisfy isSpace
 
-spaces :: Parser ()
-spaces = skipMany space
+skipWhitespaces :: Parser ()
+skipWhitespaces = skipMany space
 
 lower :: Parser Char
 lower = satisfy isLower
@@ -43,12 +59,6 @@ alpha = satisfy isAlpha
 letter :: Parser Char
 letter = alpha
 
-anyChar :: Parser Char
-anyChar = satisfy (const True)
-
-notChar :: Char -> Parser Char
-notChar c = satisfy (/=c)
-
 string :: String -> Parser String
 string "" = pure ""
 string ccs@(c:cs) = char c *> string cs *> pure ccs
@@ -61,3 +71,12 @@ tab = char '\t'
 
 newline :: Parser Char
 newline = char '\n'
+
+carriage :: Parser Char
+carriage = char '\r'
+
+crlf :: Parser Char
+crlf = carriage *> newline
+
+eol :: Parser Char
+eol = newline <|> crlf

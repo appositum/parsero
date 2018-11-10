@@ -3,6 +3,7 @@ module Text.Cuceta.Parser
   , many
   , optional
   , some
+  , Alternative
   , ParseError(..)
   , Parser(..)
   , (<|>)
