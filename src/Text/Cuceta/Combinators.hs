@@ -9,6 +9,7 @@ module Text.Cuceta.Combinators
   , skipMany
   , skipOptional
   , skipSome
+  , skipWhile
   , surroundedBy
   , try
   ) where
@@ -49,6 +50,9 @@ skipSome p = some p *> pure ()
 
 skipOptional :: Parser a -> Parser ()
 skipOptional p = () <$ p <|> pure ()
+
+skipWhile :: (Char -> Bool) -> Parser ()
+skipWhile = skipMany . satisfy
 
 between :: Parser open -> Parser close -> Parser a -> Parser a
 between open close p = do
