@@ -9,7 +9,7 @@ module Text.Cuceta.Char
   , newline
   , notChar
   , space
-  , whitespaces
+  , skipWhitespaces
   , string
   , tab
   , upper
@@ -25,8 +25,8 @@ char c = satisfy (==c)
 space :: Parser Char
 space = satisfy isSpace
 
-whitespaces :: Parser ()
-whitespaces = skipMany space
+skipWhitespaces :: Parser ()
+skipWhitespaces = skipMany space
 
 lower :: Parser Char
 lower = satisfy isLower
