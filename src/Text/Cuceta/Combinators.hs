@@ -2,8 +2,11 @@ module Text.Cuceta.Combinators
   ( between
   , choice
   , consume
-  , consumeWhile
+  , consumeMany
+  , consumeSome
+  , consumeTill
   , item
+  , manyTill
   , noneOf
   , oneOf
   , option
@@ -56,17 +59,31 @@ skipOptional p = () <$ p <|> pure ()
 skipWhile :: (Char -> Bool) -> Parser ()
 skipWhile = skipMany . satisfy
 
+manyTill :: Alternative f => f a -> f end -> f [a]
+manyTill p end = go where
+  go =  ([] <$ end)
+    <|> ((:) <$> p <*> go)
+
 consume :: Int -> Parser [Char]
 consume n = MkParser $ \input ->
   case input of
     [] -> (Left EndOfStream, [])
     xs -> (Right (take n xs), drop n xs)
 
-consumeWhile :: (Char -> Bool) -> Parser [Char]
-consumeWhile p = MkParser $ \input ->
+consumeMany :: (Char -> Bool) -> Parser [Char]
+consumeMany p = MkParser $ \input ->
+  case input of
+    [] -> (Right [], [])
+    xs -> (Right (takeWhile p xs), dropWhile p xs)
+
+consumeSome :: (Char -> Bool) -> Parser [Char]
+consumeSome p = MkParser $ \input ->
   case input of
     [] -> (Left EndOfStream, [])
     xs -> (Right (takeWhile p xs), dropWhile p xs)
+
+consumeTill :: (Char -> Bool) -> Parser [Char]
+consumeTill p = consumeMany (not . p)
 
 between :: Parser open -> Parser close -> Parser a -> Parser a
 between open close p = do
