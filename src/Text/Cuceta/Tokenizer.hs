@@ -57,14 +57,14 @@ charLiteral = do
 stringLiteral :: Parser String
 stringLiteral = do
   char '"'
-  str <- many $ notChar '"'
+  str <- many anyChar
   char '"'
   pure str
 
 stringLiteral' :: Parser String
 stringLiteral' = do
   char '\''
-  str <- many $ notChar '\''
+  str <- many anyChar
   char '\''
   pure str
 
