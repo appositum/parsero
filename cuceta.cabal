@@ -25,6 +25,7 @@ library
       Text.Cuceta.Combinators
       Text.Cuceta.Parser
       Text.Cuceta.Tokenizer
+      Text.Cuceta.Stream
   other-modules:
       Paths_cuceta
   hs-source-dirs:
