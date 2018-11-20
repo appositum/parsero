@@ -1,3 +1,5 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Text.Cuceta.Combinators
   ( between
   , choice
@@ -7,7 +9,6 @@ module Text.Cuceta.Combinators
   , consumeTill
   , endBy
   , endBy1
-  , item
   , manyTill
   , noneOf
   , oneOf
@@ -23,99 +24,97 @@ module Text.Cuceta.Combinators
   , try
   ) where
 
-import Text.Cuceta.Parser
+import           Control.Applicative (empty)
+import           Text.Cuceta.Parser
+import           Text.Cuceta.Stream (Stream)
+import qualified Text.Cuceta.Stream as S
 
-item :: Parser Char
-item = MkParser $ \input ->
-  case input of
-    [] -> (Left EmptyInput, [])
-    (a:rest) -> (Right a, rest)
+satisfy :: Stream s => (Char -> Bool) -> Parser s Char
+satisfy p = MkParser $ \case
+  input | input == S.empty -> (Left EndOfStream, S.empty)
+        | otherwise -> if p a then (Right a, rest) else (Left DoesNotSatisfy, rest)
+        where rest = S.tail input
+              a = S.head input
 
-satisfy :: (Char -> Bool) -> Parser Char
-satisfy p = MkParser $ \input ->
-  case input of
-    [] -> (Left EndOfStream, [])
-    (a:rest) ->
-      if p a then (Right a, rest)
-      else (Left DoesNotSatisfy, rest)
-
-try :: Parser a -> Parser a
+try :: Stream s => Parser s a -> Parser s a
 try p = MkParser $ \input ->
   case parse p input of
     (Left err, _) -> (Left err, input)
     (Right a, input') -> (Right a, input')
 
-oneOf :: [Char] -> Parser Char
+oneOf :: Stream s => [Char] -> Parser s Char
 oneOf xs = satisfy (\x -> x `elem` xs)
 
-noneOf :: [Char] -> Parser Char
+noneOf :: Stream s => [Char] -> Parser s Char
 noneOf xs = satisfy (\x -> x `notElem` xs)
 
-skipMany :: Parser a -> Parser ()
+skipMany :: Stream s => Parser s a -> Parser s ()
 skipMany p = many p *> pure ()
 
-skipSome :: Parser a -> Parser ()
+skipSome :: Stream s => Parser s a -> Parser s ()
 skipSome p = some p *> pure ()
 
-skipOptional :: Parser a -> Parser ()
+skipOptional :: Stream s => Parser s a -> Parser s ()
 skipOptional p = () <$ p <|> pure ()
 
-skipWhile :: (Char -> Bool) -> Parser ()
+skipWhile :: Stream s => (Char -> Bool) -> Parser s ()
 skipWhile = skipMany . satisfy
 
-manyTill :: Alternative f => f a -> f end -> f [a]
+manyTill :: Stream s => Parser s a -> Parser s end -> Parser s [a]
 manyTill p end = go where
-  go =  ([] <$ end)
-    <|> ((:) <$> p <*> go)
+  go = ([] <$ end) <|> ((:) <$> p <*> go)
 
-consume :: Int -> Parser [Char]
-consume n = MkParser $ \input ->
-  case input of
-    [] -> (Left EndOfStream, [])
-    xs -> (Right (take n xs), drop n xs)
+consume :: Stream s => Int -> Parser s s
+consume n = MkParser $ \case
+  input | input == S.empty -> (Left EndOfStream, S.empty)
+        | otherwise -> (Right x, xs)
+        where xs = S.drop n input
+              x = S.take n input
 
-consumeMany :: (Char -> Bool) -> Parser [Char]
-consumeMany p = MkParser $ \input ->
-  case input of
-    [] -> (Right [], [])
-    xs -> (Right (takeWhile p xs), dropWhile p xs)
+consumeMany :: Stream s => (Char -> Bool) -> Parser s s
+consumeMany p = MkParser $ \case
+  input | input == S.empty -> (Right S.empty, S.empty)
+        | otherwise -> (Right x, xs)
+        where xs = S.dropWhile p input
+              x = S.takeWhile p input
 
-consumeSome :: (Char -> Bool) -> Parser [Char]
-consumeSome p = MkParser $ \input ->
-  case input of
-    [] -> (Left EndOfStream, [])
-    xs -> (Right (takeWhile p xs), dropWhile p xs)
+consumeSome :: Stream s => (Char -> Bool) -> Parser s s
+consumeSome p = MkParser $ \case
+  input | input == S.empty -> (Left EndOfStream, S.empty)
+        | otherwise -> (Right x, xs)
+        where xs = S.dropWhile p input
+              x = S.takeWhile p input
 
-consumeTill :: (Char -> Bool) -> Parser [Char]
+consumeTill :: Stream s => (Char -> Bool) -> Parser s s
 consumeTill p = consumeMany (not . p)
 
-between :: Parser open -> Parser close -> Parser a -> Parser a
+between :: Stream s => Parser s fst -> Parser s snd -> Parser s a -> Parser s a
 between open close p = do
   open
   val <- p
   close
   pure val
 
-choice :: [Parser a] -> Parser a
+choice :: Stream s => [Parser s a] -> Parser s a
 choice = foldr (<|>) empty
 
-option :: a -> Parser a -> Parser a
+option :: Stream s => a -> Parser s a -> Parser s a
 option a p = p <|> pure a
 
-surroundedBy :: Parser a -> Parser s -> Parser a
+surroundedBy :: Stream s => Parser s a -> Parser s sur -> Parser s a
 surroundedBy p s = between s s p
 
-sepBy :: Parser a -> Parser sep -> Parser [a]
+sepBy :: Stream s => Parser s a -> Parser s sep -> Parser s [a]
 sepBy p sep = sepBy1 p sep <|> pure []
 
-sepBy1 :: Parser a -> Parser sep -> Parser [a]
+sepBy1 :: Stream s => Parser s a -> Parser s sep -> Parser s [a]
 sepBy1 p sep = do
   x <- p
   xs <- many (sep >> p)
   pure (x:xs)
 
-endBy :: Parser a -> Parser end -> Parser [a]
+endBy :: Stream s => Parser s a -> Parser s end -> Parser s [a]
 endBy p end = many (p <* end)
 
-endBy1 :: Parser a -> Parser end -> Parser [a]
+endBy1 :: Stream s => Parser s a -> Parser s end -> Parser s [a]
 endBy1 p end = some (p <* end)
