@@ -12,9 +12,9 @@ module Text.Cuceta.Stream
   , takeWhile
   ) where
 
-import           Prelude (not, (==), Bool(..), Char, Eq, Int, String)
-import qualified Prelude as P
 import qualified Data.Text as T
+import           Prelude   (Bool (..), Char, Eq, Int, String, not, (==))
+import qualified Prelude   as P
 
 class Eq s => Stream s where
   cons :: Char -> s -> s

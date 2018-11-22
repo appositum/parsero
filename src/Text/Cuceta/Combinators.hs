@@ -26,8 +26,8 @@ module Text.Cuceta.Combinators
 
 import           Control.Applicative (empty)
 import           Text.Cuceta.Parser
-import           Text.Cuceta.Stream (Stream)
-import qualified Text.Cuceta.Stream as S
+import           Text.Cuceta.Stream  (Stream)
+import qualified Text.Cuceta.Stream  as S
 
 satisfy :: Stream s => (Char -> Bool) -> Parser s Char
 satisfy p = MkParser $ \case
