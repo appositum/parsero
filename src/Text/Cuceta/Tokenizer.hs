@@ -24,86 +24,87 @@ module Text.Cuceta.Tokenizer
   , token
   ) where
 
+import Data.Char
+import Data.Foldable           (foldl')
 import Text.Cuceta.Char
 import Text.Cuceta.Combinators
 import Text.Cuceta.Parser
-import Data.Char
-import Data.Foldable (foldl')
+import Text.Cuceta.Stream      (Stream)
 
 data IntegerOrDouble = MkInteger Integer
                      | MkDouble Double
                      deriving (Eq, Show)
 
-token :: Parser a -> Parser a
+token :: Stream s => Parser s a -> Parser s a
 token p = do
   skipWhitespaces
   v <- p
   skipWhitespaces
   pure v
 
-symbol :: String -> Parser String
-symbol = token . string
+symbol :: Stream s => s -> Parser s s
+symbol = token . chunk
 
-symbolic :: Char -> Parser Char
+symbolic :: Stream s => Char -> Parser s Char
 symbolic = token . char
 
-charLiteral :: Parser Char
+charLiteral :: Stream s => Parser s Char
 charLiteral = do
   char '\''
   c <- anyChar
   char '\''
   pure c
 
-stringLiteral :: Parser String
+stringLiteral :: Stream s => Parser s String
 stringLiteral = do
   char '"'
   str <- many anyChar
   char '"'
   pure str
 
-stringLiteral' :: Parser String
+stringLiteral' :: Stream s => Parser s String
 stringLiteral' = do
   char '\''
   str <- many anyChar
   char '\''
   pure str
 
-comma :: Parser Char
+comma :: Stream s => Parser s Char
 comma = symbolic ','
 
-dot :: Parser Char
+dot :: Stream s => Parser s Char
 dot = symbolic '.'
 
-colon :: Parser Char
+colon :: Stream s => Parser s Char
 colon = symbolic ':'
 
-semicolon :: Parser Char
+semicolon :: Stream s => Parser s Char
 semicolon = symbolic ';'
 
-parens :: Parser a -> Parser a
+parens :: Stream s => Parser s a -> Parser s a
 parens = between (symbolic '(') (symbolic ')')
 
-brackets :: Parser a -> Parser a
+brackets :: Stream s => Parser s a -> Parser s a
 brackets = between (symbolic '[') (symbolic ']')
 
-braces :: Parser a -> Parser a
+braces :: Stream s => Parser s a -> Parser s a
 braces = between (symbolic '{') (symbolic '}')
 
-angles :: Parser a -> Parser a
+angles :: Stream s => Parser s a -> Parser s a
 angles = between (symbolic '<') (symbolic '>')
 
-signed :: Num a => Parser (a -> a)
+signed :: (Num a, Stream s) => Parser s (a -> a)
 signed =  negate <$ char '-'
       <|> id <$ char '+'
       <|> pure id
 
-natural :: Parser Integer
+natural :: Stream s => Parser s Integer
 natural = token $ read <$> some digit
 
-integer :: Parser Integer
+integer :: Stream s => Parser s Integer
 integer = token $ signed <*> natural
 
-double :: Parser Double
+double :: Stream s => Parser s Double
 double = token $ signed <*> double' where
   double' = do
     first <- some digit
@@ -111,34 +112,34 @@ double = token $ signed <*> double' where
     rest <- some digit
     pure $ read (first ++ dot : rest)
 
-float :: Parser Double
+float :: Stream s => Parser s Double
 float = double
 
-integerOrDouble :: Parser IntegerOrDouble
+integerOrDouble :: Stream s => Parser s IntegerOrDouble
 integerOrDouble = MkDouble <$> double <|> MkInteger <$> integer
 
-naturalOrDouble :: Parser IntegerOrDouble
+naturalOrDouble :: Stream s => Parser s IntegerOrDouble
 naturalOrDouble = MkDouble <$> double <|> MkInteger <$> natural
 
 toDecimal :: Integer -> String -> Integer
 toDecimal base =
   foldl' (\x z -> base*x + fromIntegral (digitToInt z)) 0
 
-hex :: Parser Integer
+hex :: Stream s => Parser s Integer
 hex = token $ do
   char '0'
   oneOf "xX"
   h <- some $ digit <|> oneOf (['a'..'f'] ++ ['A'..'F'])
   pure $ toDecimal 16 h
 
-oct :: Parser Integer
+oct :: Stream s => Parser s Integer
 oct = token $ do
   char '0'
   oneOf "oO"
   o <- some (oneOf ['0'..'7'])
   pure $ toDecimal 8 o
 
-bin :: Parser Integer
+bin :: Stream s => Parser s Integer
 bin = token $ do
   char '0'
   oneOf "bB"

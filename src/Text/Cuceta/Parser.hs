@@ -9,7 +9,8 @@ module Text.Cuceta.Parser
   , (<|>)
   ) where
 
-import           Control.Applicative
+import Control.Applicative
+import Text.Cuceta.Stream  (Stream)
 
 data ParseError = EndOfStream
                 | EmptyInput
