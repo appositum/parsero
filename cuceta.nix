@@ -1,7 +1,7 @@
 { mkDerivation, stdenv, base, text }:
 mkDerivation {
   pname = "cuceta";
-  version = "0.1.0.0";
+  version = "0.2.0.0";
   src = ./.;
   libraryHaskellDepends = [ base text ];
   testHaskellDepends = [ base ];
