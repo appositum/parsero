@@ -1,6 +1,4 @@
 language: nix
-install:
-  - nix --version
 script: nix-build
 
 notifications:
