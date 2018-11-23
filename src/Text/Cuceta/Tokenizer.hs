@@ -35,12 +35,9 @@ data IntegerOrDouble = MkInteger Integer
                      | MkDouble Double
                      deriving (Eq, Show)
 
+
 token :: Stream s => Parser s a -> Parser s a
-token p = do
-  skipWhitespaces
-  v <- p
-  skipWhitespaces
-  pure v
+token p = p `surroundedBy` skipWhitespaces
 
 symbol :: Stream s => s -> Parser s s
 symbol = token . chunk
@@ -49,25 +46,13 @@ symbolic :: Stream s => Char -> Parser s Char
 symbolic = token . char
 
 charLiteral :: Stream s => Parser s Char
-charLiteral = do
-  char '\''
-  c <- anyChar
-  char '\''
-  pure c
+charLiteral = notChar '\'' `surroundedBy` char '\''
 
 stringLiteral :: Stream s => Parser s String
-stringLiteral = do
-  char '"'
-  str <- many anyChar
-  char '"'
-  pure str
+stringLiteral = many (notChar '"') `surroundedBy` symbolic '"'
 
 stringLiteral' :: Stream s => Parser s String
-stringLiteral' = do
-  char '\''
-  str <- many anyChar
-  char '\''
-  pure str
+stringLiteral' = many (notChar '\'') `surroundedBy` symbolic '\''
 
 comma :: Stream s => Parser s Char
 comma = symbolic ','
