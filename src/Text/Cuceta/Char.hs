@@ -5,6 +5,7 @@ module Text.Cuceta.Char
   , carriage
   , char
   , char'
+  , chunk
   , crlf
   , digit
   , eol
@@ -19,64 +20,72 @@ module Text.Cuceta.Char
   , upper
   ) where
 
-import Text.Cuceta.Combinators
-import Text.Cuceta.Parser
-import Data.Char
+import           Data.Char
+import           Data.Text               (Text)
+import           Text.Cuceta.Combinators
+import           Text.Cuceta.Parser
+import           Text.Cuceta.Stream      (Stream)
+import qualified Text.Cuceta.Stream      as S
 
-char :: Char -> Parser Char
+char :: Stream s => Char -> Parser s Char
 char c = satisfy (==c)
 
--- Case insensitive
-char' :: Char -> Parser Char
+char' :: Stream s => Char -> Parser s Char
 char' c =  char (toLower c)
        <|> char (toUpper c)
        <|> char (toTitle c)
 
-anyChar :: Parser Char
+anyChar :: Stream s => Parser s Char
 anyChar = satisfy (const True)
 
-notChar :: Char -> Parser Char
+notChar :: Stream s => Char -> Parser s Char
 notChar c = satisfy (/=c)
 
-space :: Parser Char
+space :: Stream s => Parser s Char
 space = satisfy isSpace
 
-skipWhitespaces :: Parser ()
+skipWhitespaces :: Stream s => Parser s ()
 skipWhitespaces = skipMany space
 
-lower :: Parser Char
+lower :: Stream s => Parser s Char
 lower = satisfy isLower
 
-upper :: Parser Char
+upper :: Stream s => Parser s Char
 upper = satisfy isUpper
 
-alphaNum :: Parser Char
+alphaNum :: Stream s => Parser s Char
 alphaNum = satisfy isAlphaNum
 
-alpha :: Parser Char
+alpha :: Stream s => Parser s Char
 alpha = satisfy isAlpha
 
-letter :: Parser Char
+letter :: Stream s => Parser s Char
 letter = alpha
 
-string :: String -> Parser String
-string "" = pure ""
-string ccs@(c:cs) = char c *> string cs *> pure ccs
+chunk :: Stream s => s -> Parser s s
+chunk css
+  | css == S.empty = pure S.empty
+  | otherwise = char c *> chunk cs *> pure css
+  where cs = S.tail css
+        c = S.head css
 
-digit :: Parser Char
+string :: Stream s => s -> Parser s s
+string = chunk
+
+digit :: Stream s => Parser s Char
 digit = satisfy isDigit
 
-tab :: Parser Char
+tab :: Stream s => Parser s Char
 tab = char '\t'
 
-newline :: Parser Char
+newline :: Stream s => Parser s Char
 newline = char '\n'
 
-carriage :: Parser Char
+carriage :: Stream s => Parser s Char
 carriage = char '\r'
 
-crlf :: Parser Char
+crlf :: Stream s => Parser s Char
 crlf = carriage *> newline
 
-eol :: Parser Char
+eol :: Stream s => Parser s Char
 eol = newline <|> crlf
