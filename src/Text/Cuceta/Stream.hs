@@ -13,7 +13,7 @@ module Text.Cuceta.Stream
   ) where
 
 import qualified Data.Text as T
-import           Prelude   (Bool (..), Char, Eq, Int, String, not, (==))
+import           Prelude   (Bool(..), Char, Eq, Int, String, (==))
 import qualified Prelude   as P
 
 class Eq s => Stream s where
@@ -44,7 +44,7 @@ instance Stream T.Text where
   cons = T.cons
   empty = T.empty
   elem a = T.foldr (\x _ -> x == a) False
-  notElem x xs = not (elem x xs)
+  notElem x xs = P.not (elem x xs)
   drop = T.drop
   dropWhile = T.dropWhile
   head = T.head
