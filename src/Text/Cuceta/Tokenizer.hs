@@ -35,11 +35,7 @@ data IntegerOrDouble = MkInteger Integer
                      deriving (Eq, Show)
 
 token :: Parser a -> Parser a
-token p = do
-  skipWhitespaces
-  v <- p
-  skipWhitespaces
-  pure v
+token p = p `surroundedBy` skipWhitespaces
 
 symbol :: String -> Parser String
 symbol = token . string
@@ -48,25 +44,13 @@ symbolic :: Char -> Parser Char
 symbolic = token . char
 
 charLiteral :: Parser Char
-charLiteral = do
-  char '\''
-  c <- anyChar
-  char '\''
-  pure c
+charLiteral = notChar '\'' `surroundedBy` char '\''
 
 stringLiteral :: Parser String
-stringLiteral = do
-  char '"'
-  str <- many anyChar
-  char '"'
-  pure str
+stringLiteral = many (notChar '"') `surroundedBy` symbolic '"'
 
 stringLiteral' :: Parser String
-stringLiteral' = do
-  char '\''
-  str <- many anyChar
-  char '\''
-  pure str
+stringLiteral' = many (notChar '\'') `surroundedBy` symbolic '\''
 
 comma :: Parser Char
 comma = symbolic ','
