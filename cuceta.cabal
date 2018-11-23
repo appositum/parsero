@@ -1,5 +1,5 @@
 name:           cuceta
-version:        0.1.0.0
+version:        0.2.0.0
 description:    Please see the README on GitHub at <https://github.com/appositum/cuceta#readme>
 homepage:       https://github.com/appositum/cuceta#readme
 bug-reports:    https://github.com/appositum/cuceta/issues
@@ -25,12 +25,14 @@ library
       Text.Cuceta.Combinators
       Text.Cuceta.Parser
       Text.Cuceta.Tokenizer
+      Text.Cuceta.Stream
   other-modules:
       Paths_cuceta
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , text
   default-language: Haskell2010
 
 test-suite cuceta-test

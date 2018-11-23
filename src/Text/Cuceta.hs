@@ -1,5 +1,6 @@
 module Text.Cuceta
-  ( module Text.Cuceta.Char
+  ( Stream
+  , module Text.Cuceta.Char
   , module Text.Cuceta.Combinators
   , module Text.Cuceta.Parser
   , module Text.Cuceta.Tokenizer
@@ -8,4 +9,5 @@ module Text.Cuceta
 import Text.Cuceta.Char
 import Text.Cuceta.Combinators
 import Text.Cuceta.Parser
+import Text.Cuceta.Stream      (Stream)
 import Text.Cuceta.Tokenizer
