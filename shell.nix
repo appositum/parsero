@@ -9,6 +9,6 @@ let
     else pkgs.haskell.packages.${compiler};
 
   variant = if doBenchmark then pkgs.haskell.lib.doBenchmark else pkgs.lib.id;
-  drv = variant (haskellPackages.callPackage ./default.nix {});
+  drv = variant (haskellPackages.callPackage ./cuceta.nix {});
 in
   if pkgs.lib.inNixShell then drv.env else drv
