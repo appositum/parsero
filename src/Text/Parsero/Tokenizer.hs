@@ -1,4 +1,4 @@
-module Text.Cuceta.Tokenizer
+module Text.Parsero.Tokenizer
   ( angles
   , bin
   , braces
@@ -26,10 +26,10 @@ module Text.Cuceta.Tokenizer
 
 import Data.Char
 import Data.Foldable           (foldl')
-import Text.Cuceta.Char
-import Text.Cuceta.Combinators
-import Text.Cuceta.Parser
-import Text.Cuceta.Stream      (Stream)
+import Text.Parsero.Char
+import Text.Parsero.Combinators
+import Text.Parsero.Parser
+import Text.Parsero.Stream      (Stream)
 
 data IntegerOrDouble = MkInteger Integer
                      | MkDouble Double

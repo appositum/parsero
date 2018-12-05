@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 
-module Text.Cuceta.Combinators
+module Text.Parsero.Combinators
   ( between
   , choice
   , consume
@@ -25,9 +25,9 @@ module Text.Cuceta.Combinators
   ) where
 
 import           Control.Applicative (empty)
-import           Text.Cuceta.Parser
-import           Text.Cuceta.Stream  (Stream)
-import qualified Text.Cuceta.Stream  as S
+import           Text.Parsero.Parser
+import           Text.Parsero.Stream  (Stream)
+import qualified Text.Parsero.Stream  as S
 
 satisfy :: Stream s => (Char -> Bool) -> Parser s Char
 satisfy p = MkParser $ \case

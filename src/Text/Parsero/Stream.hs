@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
-module Text.Cuceta.Stream
+module Text.Parsero.Stream
   ( Stream
   , cons
   , empty

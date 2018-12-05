@@ -1,4 +1,4 @@
-module Text.Cuceta.Parser
+module Text.Parsero.Parser
   ( empty
   , many
   , optional
@@ -10,7 +10,7 @@ module Text.Cuceta.Parser
   ) where
 
 import Control.Applicative
-import Text.Cuceta.Stream  (Stream)
+import Text.Parsero.Stream  (Stream)
 
 data ParseError = EndOfStream
                 | EmptyInput

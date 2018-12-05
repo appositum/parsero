@@ -1,4 +1,4 @@
-module Text.Cuceta.Char
+module Text.Parsero.Char
   ( alpha
   , alphaNum
   , anyChar
@@ -22,10 +22,10 @@ module Text.Cuceta.Char
 
 import           Data.Char
 import           Data.Text               (Text)
-import           Text.Cuceta.Combinators
-import           Text.Cuceta.Parser
-import           Text.Cuceta.Stream      (Stream)
-import qualified Text.Cuceta.Stream      as S
+import           Text.Parsero.Combinators
+import           Text.Parsero.Parser
+import           Text.Parsero.Stream      (Stream)
+import qualified Text.Parsero.Stream      as S
 
 char :: Stream s => Char -> Parser s Char
 char c = satisfy (==c)
