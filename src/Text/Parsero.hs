@@ -9,5 +9,5 @@ module Text.Parsero
 import Text.Parsero.Char
 import Text.Parsero.Combinators
 import Text.Parsero.Parser
-import Text.Parsero.Stream      (Stream)
+import Text.Parsero.Stream
 import Text.Parsero.Tokenizer
