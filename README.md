@@ -1,4 +1,5 @@
 # Parsero
+Parsequinho from scratch
 
 ### Setup
 ```bash
