@@ -7,7 +7,7 @@ module Text.Parsero.Stream
   , empty
   , elem
   , notElem
-  , dropH
+  , drop
   , dropWhile
   , head
   , tail
