@@ -46,4 +46,6 @@ test-suite parsero-test
   build-depends:
       base >=4.7 && <5
     , parsero
+    , hspec
+    , QuickCheck
   default-language: Haskell2010
