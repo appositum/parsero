@@ -25,7 +25,7 @@ module Text.Parsero.Tokenizer
   ) where
 
 import Data.Char
-import Data.Foldable           (foldl')
+import Data.Foldable            (foldl')
 import Text.Parsero.Char
 import Text.Parsero.Combinators
 import Text.Parsero.Parser

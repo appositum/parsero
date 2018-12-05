@@ -10,7 +10,7 @@ module Text.Parsero.Parser
   ) where
 
 import Control.Applicative
-import Text.Parsero.Stream  (Stream)
+import Text.Parsero.Stream (Stream)
 
 data ParseError = EndOfStream
                 | EmptyInput
