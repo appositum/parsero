@@ -24,7 +24,7 @@ testLiteral parser prop prefix = do
   putStr "  Samples: "
   print samples
   let (res, rest) = parse parser (prefix ++ samples)
-  putStrLn ("  Inconsumed input for " ++ show res ++ ": " ++ rest)
+  putStrLn $ "  Inconsumed input for " ++ show res ++ ": " ++ rest
   res `shouldSatisfy` isRight
 
 propHex :: Gen Char
