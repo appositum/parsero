@@ -5,7 +5,9 @@ Parsequinho from scratch
 ```bash
 git clone https://github.com/appositum/parsero.git
 cd parsero/
-nix-shell --run "cabal repl"
+nix-build
+# load on the repl
+nix-shell --run "cabal --enable-nix repl lib:parsero"
 ```
 <br>
 
