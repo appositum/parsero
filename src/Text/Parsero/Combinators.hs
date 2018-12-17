@@ -26,8 +26,8 @@ module Text.Parsero.Combinators
 
 import           Control.Applicative (empty)
 import           Text.Parsero.Parser
-import           Text.Parsero.Stream  (Stream)
-import qualified Text.Parsero.Stream  as S
+import           Text.Parsero.Stream (Stream)
+import qualified Text.Parsero.Stream as S
 
 satisfy :: Stream s => (Char -> Bool) -> Parser s Char
 satisfy p = MkParser $ \case
