@@ -88,7 +88,8 @@ consumeSome p = MkParser $ \case
 consumeTill :: Stream s => (Char -> Bool) -> Parser s s
 consumeTill p = consumeMany (not . p)
 
-between :: Stream s => Parser s fst -> Parser s snd -> Parser s a -> Parser s a
+between :: Stream s => Parser s open -> Parser s close
+        -> Parser s a -> Parser s a
 between open close p = open *> p <* close
 
 choice :: Stream s => [Parser s a] -> Parser s a

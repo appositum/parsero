@@ -2,13 +2,24 @@
 Parsequinho from scratch
 
 ### Setup
+- **Nix**
 ```bash
-git clone https://github.com/appositum/parsero.git
-cd parsero/
 nix-build
-# load on the repl
-nix-shell --run "cabal --enable-nix repl lib:parsero"
+cabal --enable-nix repl lib:parsero
 ```
+
+- **Stack**
+```bash
+stack install
+stack repl
+```
+
+- **Cabal new-\***
+```bash
+cabal new-update
+cabal new-repl
+```
+
 <br>
 
 ![parsero](https://media.discordapp.net/attachments/429110044995616780/519744240990027787/unknown.png)
