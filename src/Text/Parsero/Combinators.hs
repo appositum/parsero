@@ -26,8 +26,8 @@ module Text.Parsero.Combinators
 
 import           Control.Applicative (empty)
 import           Text.Parsero.Parser
-import           Text.Parsero.Stream  (Stream)
-import qualified Text.Parsero.Stream  as S
+import           Text.Parsero.Stream (Stream)
+import qualified Text.Parsero.Stream as S
 
 satisfy :: Stream s => (Char -> Bool) -> Parser s Char
 satisfy p = MkParser $ \case
@@ -88,12 +88,9 @@ consumeSome p = MkParser $ \case
 consumeTill :: Stream s => (Char -> Bool) -> Parser s s
 consumeTill p = consumeMany (not . p)
 
-between :: Stream s => Parser s fst -> Parser s snd -> Parser s a -> Parser s a
-between open close p = do
-  open
-  val <- p
-  close
-  pure val
+between :: Stream s => Parser s open -> Parser s close
+        -> Parser s a -> Parser s a
+between open close p = open *> p <* close
 
 choice :: Stream s => [Parser s a] -> Parser s a
 choice = foldr (<|>) empty
@@ -108,10 +105,7 @@ sepBy :: Stream s => Parser s a -> Parser s sep -> Parser s [a]
 sepBy p sep = sepBy1 p sep <|> pure []
 
 sepBy1 :: Stream s => Parser s a -> Parser s sep -> Parser s [a]
-sepBy1 p sep = do
-  x <- p
-  xs <- many (sep >> p)
-  pure (x:xs)
+sepBy1 p sep = (:) <$> p <*> many (sep *> p)
 
 endBy :: Stream s => Parser s a -> Parser s end -> Parser s [a]
 endBy p end = many (p <* end)

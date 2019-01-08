@@ -4,13 +4,13 @@ module Text.Parsero.Parser
   , optional
   , some
   , Alternative
-  , ParseError(..)
   , Parser(..)
+  , ParseError(..)
   , (<|>)
   ) where
 
 import Control.Applicative
-import Text.Parsero.Stream  (Stream)
+import Text.Parsero.Stream (Stream)
 
 data ParseError = EndOfStream
                 | EmptyInput

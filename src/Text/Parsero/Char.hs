@@ -21,7 +21,6 @@ module Text.Parsero.Char
   ) where
 
 import           Data.Char
-import           Data.Text               (Text)
 import           Text.Parsero.Combinators
 import           Text.Parsero.Parser
 import           Text.Parsero.Stream      (Stream)
