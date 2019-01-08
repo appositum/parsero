@@ -4,8 +4,8 @@ module Text.Parsero.Parser
   , optional
   , some
   , Alternative
-  , ParseError(..)
   , Parser(..)
+  , ParseError(..)
   , (<|>)
   ) where
 
