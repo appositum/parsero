@@ -18,7 +18,7 @@ main = hspec $ do
     it "Can parse a bin literal" $ do
       testLiteral bin propBin "0b"
 
-testLiteral :: Parser String Integer -> Gen Char -> String -> IO ()
+testLiteral :: Parsero String Integer -> Gen Char -> String -> IO ()
 testLiteral parser prop prefix = do
   samples <- sample' prop
   putStr "  Samples: "
