@@ -4,7 +4,7 @@ module Text.Parsero.Parser
   , optional
   , some
   , Alternative
-  , Parser(..)
+  , Parsero(..)
   , ParseError(..)
   , (<|>)
   ) where
@@ -17,31 +17,31 @@ data ParseError = EndOfStream
                 | DoesNotSatisfy
                 deriving (Eq, Show)
 
-newtype Parser s a = MkParser
+newtype Parsero s a = MkParsero
   { parse :: s -> (Either ParseError a, s) }
 
-instance Stream s => Functor (Parser s) where
-  fmap f p = MkParser $ \input ->
+instance Stream s => Functor (Parsero s) where
+  fmap f p = MkParsero $ \input ->
     case parse p input of
       (Left err, rest) -> (Left err, rest)
       (Right a, rest) -> (Right (f a), rest)
 
-instance Stream s => Applicative (Parser s) where
-  pure a = MkParser $ \input -> (Right a, input)
-  pf <*> px = MkParser $ \input ->
+instance Stream s => Applicative (Parsero s) where
+  pure a = MkParsero $ \input -> (Right a, input)
+  pf <*> px = MkParsero $ \input ->
     case parse pf input of
       (Left err, rest) -> (Left err, rest)
       (Right f, rest) -> parse (f <$> px) rest
 
-instance Stream s => Alternative (Parser s) where
-  empty = MkParser $ \input -> (Left EmptyInput, input)
-  p1 <|> p2 = MkParser $ \input ->
+instance Stream s => Alternative (Parsero s) where
+  empty = MkParsero $ \input -> (Left EmptyInput, input)
+  p1 <|> p2 = MkParsero $ \input ->
     case parse p1 input of
       (Left err, _) -> parse p2 input
       (Right a, rest) -> (Right a, rest)
 
-instance Stream s => Monad (Parser s) where
-  p >>= f = MkParser $ \input ->
+instance Stream s => Monad (Parsero s) where
+  p >>= f = MkParsero $ \input ->
     case parse p input of
       (Left err, rest) -> (Left err, rest)
       (Right a, rest) -> parse (f a) rest
