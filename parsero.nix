@@ -8,7 +8,4 @@ mkDerivation {
   doHaddock = false;
   homepage = "https://github.com/appositum/parsero#readme";
   license = stdenv.lib.licenses.asl20;
-  shellHook = ''
-    source ~/.bashrc
-  '';
 }
