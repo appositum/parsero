@@ -1,7 +1,7 @@
 # Parsero
 Parsequinho from scratch
 
-![parsero](https://media.discordapp.net/attachments/429110044995616780/519744240990027787/unknown.png)
+![parsero](assets/parsero.png)
 
 ### Setup
 - **Nix**
